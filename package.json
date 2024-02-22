@@ -1,0 +1,47 @@
+{
+  "name": "neural-transfer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "budo main.js:dist/bundle.js --live --host localhost",
+    "prep": "yarn && mkdirp dist",
+    "build": "browserify main.js -o dist/bundle.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-plugin-syntax-async-functions": "~6.13.0",
+    "babel-plugin-transform-regenerator": "~6.26.0",
+    "babel-preset-es2015": "~6.24.1",
+    "babelify": "~7.3.0",
+    "budo": "^10.0.4",
+    "eslint": "~4.11.0",
+    "eslint-config-google": "~0.9.1",
+    "mkdirp": "~0.5.1",
+    "uglify-js": "^3.3.17",
+    "tailwindcss": "^3.4.1"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ],
+          "plugins": [
+            "syntax-async-functions",
+            "transform-regenerator"
+          ]
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.17.0",
+    "babel-polyfill": "^6.26.0"
+  }
+}

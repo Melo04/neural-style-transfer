@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="dist/bundle.js"></script>
+    <link href="./output.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+<body class="bg-gray-800">
+    <h1
+    class="text-3xl text-center my-10 justify-center font-bold bg-gradient-to-r bg-clip-text text-transparent from-green-500 via-emerald-300 to-indigo-400"
+    >
+    Neural Style Transfer
+    </h1>
+    <input type="file" id="file-select" style="display: none" accept="image/x-png,image/gif,image/jpeg"/>
+    <div class="">
+    <div class="grid grid-cols-2 my-5">
+        <div class="col">
+            <img id="content-img" src="./img/forest_house.jpg" alt="" class="mx-auto h-64"></img>
+            <div class="max-w-sm my-5 mx-auto">
+                <label
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Content Image Size</label
+                >
+                <input
+                type="range"
+                min="256"
+                max="400"
+                value="256"
+                id="content-img-size"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-auto cursor-pointer dark:bg-gray-700"
+                />
+            </div>
+            <form class="max-w-sm mx-auto">
+            <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Select a content image</label
+            >
+            <select
+            id="content-select"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+            <option value="" disabled>Choose an image</option>
+            <option value="pic" data-modal-target="cam-modal" data-modal-toggle="cam-modal">Take a picture</option>
+            <option value="file">Select from file</option>
+            <option value="forest_house">Forest house</option>
+            <option value="wooden_house">Brown Wooden House</option>
+            <option value="twins_tower">Petronas Twins Tower</option>
+            <option value="golden_gate">Golden Gate</option>
+            <option value="bridge">Bridge</option>
+            <option value="sea_turtle">Sea turtle</option>
+            <option value="tuebingen">Tuebingen</option>
+            <option value="grace_hopper">Grace Hopper</option>
+            <option value="lion">Lion</option>
+            </select>
+            </form>
+        </div>
+        <div class="col">
+            <img id="style-img" crossorigin="anonymous" src="./img/starry_night.jpg" alt="" class="mx-auto h-64"></img>
+            <div class="max-w-sm my-5 mx-auto">
+                <label
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Style Image Size</label
+                >
+                <input
+                id="style-img-size"
+                type="range"
+                min="100"
+                max="400"
+                value="256"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-auto cursor-pointer dark:bg-gray-700"
+                />
+            </div>
+            <form class="max-w-sm mx-auto">
+            <label
+            for="countries"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Select a style image</label
+            >
+            <select
+            id="style-select"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+            <option value="" disabled>Choose an image</option>
+            <option value="file">Select from file</option>
+            <option value="starry_night">Starry night</option>
+            <option value="kanaga_great_wave">Kanagawa Great Wave</option>
+            <option value="irises">Irises</option>
+            <option value="corridor">Corridor</option>
+            <option value="kandinsky_composition_7">Kandinsky Composition 7</option>
+            <option value="humble_pillars_of_creation">Humble pillars of creation</option>
+            <option value="turner_nantes">Turner Nantes</option>
+            <option value="munch_scream">Munch Scream</option>
+            <option value="picasso_demoiselles_avignon">Picasso demoiselles avignon</option>
+            <option value="picasso_violin">Picasso Violin</option>
+            <option value="picasso_bottle_of_rum">Picasso bottle of rum</option>
+            <option value="fire">Fire</option>
+            <option value="derkovits_woman_head">Derkovit woman head</option>
+            <option value="amadeo_style_life">Amadeo style life</option>
+            <option value="derkovtis_talig">Derkovtis talig</option>
+            <option value="amadeo_cardoso">Amadeo Cardoso</option>
+            </select>
+            </form>
+        </div>
+    </div>
+    <div class="flex justify-center">
+        <div>
+            <div class="max-w-sm my-5 mx-auto">
+                <canvas id="stylized" class=""></canvas>
+                <br>
+                <label
+                id="stylized-img-ratio"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Stylization Strength</label>
+                <input
+                id="default-range"
+                type="range"
+                min="0"
+                max="100"
+                value="100"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-auto cursor-pointer dark:bg-gray-700"
+                />
+                <button type="button" id="randomize" class="text-white my-5 w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Randomize parameters</button>
+                <button disabled id="style-button" class="text-white my-5 w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Loading stylization model. Please wait..</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="hidden-canvas"></canvas>
+    <div id="cam-modal" data-modal-target="cam-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Take a picture
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cam-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="p-4">
+                <video id="webcam-video" class="centered" width="500" height="375"></video>
+            </div>
+            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button id="snap-button" data-modal-hide="cam-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Snap</button>
+                <button data-modal-hide="cam-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- <div class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full" id="cam-modal" aria-labelledby="exampleModalLabel" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog relative w-auto pointer-events-none max-w-lg my-8 mx-auto px-4 sm:px-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="exampleModalLabel">Take picture</h3>
+                            <div class="mt-2">
+                                <video id="webcam-video" class="mx-auto" width="500" height="375"></video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" id="snap-button">Snap!</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
+    <div class="grid mx-56 my-10 dark:text-white">
+        <h2 class="mx-auto text-2xl font-bold my-5">What is Neural Style Transfer?</h2>
+        <p>Neural Style Transfer is an optimization technique used to take
+            two images—a content image and a style reference image (such as an
+            artwork by a famous painter)—and blend them together so the output
+            image looks like the content image, but “painted” in the style of
+            the style reference image. How do we make sure that generated
+            image has the content of the content image and the style of the
+            style image? To answer this, let's look at what Convolutional
+            Neural Networks(CNN) are actually learning. <br /> <br />
+        </p>
+        <img src="./img/figure/fig1.png" alt="hi" class="mx-auto mb-5 w-4/6" />
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
+        <h2 class="mx-auto text-2xl font-bold my-5">Convolutional Neural Networks (CNN)</h2>
+        <p>Convolutional Neural Networks are in charge of converting the
+              image into raw pixels so that the model can use them to create a
+              set of features. The first few layers are able to recognize very
+              simple things like edges and textures, and as we go deeper into
+              the network, the layers build up to recognize complex features and
+              objects. <br /> <br />
+              The model functions as a sophisticated feature extractor halfway
+              between the layers that receive the image input and the layer that
+              produces the output. This capturing of different simple and
+              complex features is called feature representation. To obtain a
+              representation of the style of a reference image, we use the
+              correlation between different filter responses. The features that
+              we get from the higher levels of the model can be considered more
+              related to the content of the image. Let's dive more deeper.
+              <br /> <br />
+        </p>
+        <img src="./img/figure/fig3.png" alt="CNN" class="mx-auto mb-5 w-4/6" />
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
+        <h2 class="mx-auto text-2xl font-bold my-5">Neural Style Transfer Basic Structure</h2>
+        <p>Neural Style Transfer (NST) uses a previously trained
+              convolutional network, and builds on top of that, which in our
+              case, we uses the VGG-19 network as it is capable to detect
+              high-level features in an image. VGG-19 is a convolutional neural
+              network that is trained on more than a million images from the
+              ImageNet database. The idea of using a network trained on a
+              different task and applying it to a new task is called transfer
+              learning. <br /> <br />
+              Firstly, we initialize a noisy image, which is the image that we
+              want to generate. We then feed this noisy image through the VGG-19
+              network and obtain the feature representations from the
+              intermediate layers. These intermediate layers are responsible for
+              the style and content representations of the image. <br /> <br />
+              Since we want that our output image(G) should have the content of
+              the content image(C) and style of style image(S) we calculate the
+              loss of generated image(G) to the respective content(C) and
+              style(S) image.
+        </p>
+        <img src="./img/figure/fig2.png" alt="Neural Style Transfer Basic Structure" class="mx-auto my-5 w-4/6" />
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
+        <h2 class="mx-auto text-2xl font-bold my-5">Content Loss</h2>
+        <p>Content Loss helps to establish similarities between the content
+              image and the generated image. <br /> <br />
+              It is calculated by Euclidean distance between the respective
+              intermediate higher-level feature representation of input image
+              (x) and content image (p) at layer l. This helps us to deduce that
+              images having the same content should also have similar
+              activations in the higher layers.
+        </p>
+        <img src="./img/figure/fig4.png" alt="Content Loss" class="mx-auto my-5 w-2/6" />
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
+        <h2 class="mx-auto text-2xl font-bold my-5">Style Loss</h2>
+        <p>Style loss is conceptually different from Content loss. We cannot
+              just compare the intermediate features of the two images and get
+              the style loss. <br /> <br />
+              Here's where we intrpduce the concept of Gram Matrix. Gram matrix
+              is a way to interpret style information in an image as it shows
+              the overall distribution of features in a given layer. It is
+              measured as the amount of correlation present between features
+              maps in a given layer. <br /> <br />
+        </p>
+        <img src="./img/figure/fig7.png" alt="Style Loss" class="mx-auto my-5 w-2/6" />
+        <h2 class="mx-auto text-2xl font-bold my-5">References</h2>
+        <p class="mx-auto">
+            [1] Leon A. Gatys, Alexander S. Ecker, Matthias Bethge, (2015).
+              <a
+                href="https://arxiv.org/abs/1508.06576"
+                isExternal
+                class="text-blue-400 underline"
+              >
+                A Neural Algorithm of Artistic Style
+            </a>
+              <br /> <br />
+              [2]
+              <a
+                href="https://www.tensorflow.org/tutorials/generative/style_transfer"
+                isExternal
+                class="text-blue-400 underline"
+              >
+                Neural Style Transfer Tensorflow Core Tutorial.
+            </a>
+        </p>
+    </div>
+    </div>
+    <a href="https://github.com/Melo04/neural-style-transfer">
+    <footer>
+        <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+            <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+            <span class="block text-sm text-gray-500 sm:text-center dark:hover:text-white dark:text-gray-400">Made with <i class="fa fa-heart pulse"></i> by Melody Koh <i class="fa-brands fa-github"></i></span>
+        </div>
+    </footer>
+    </a>
+    
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+</body>
+</html>

@@ -34,7 +34,7 @@ Applying the style of different images produce different interesting results. He
 <img src="./img/readme/picasso_bridge.png" height="150px">
 </div>
 
-Here we reproduce Figure 3 from the [paper](https://arxiv.org/abs/1508.06576), which renders a photograph of the Neckarfront in Tübingen, Germany in the style of 4 different iconic paintings [The Starry Night](https://www.wikiart.org/en/vincent-van-gogh/the-starry-night-1889), [Composition VII](https://www.wikiart.org/en/wassily-kandinsky/composition-vii-1913), [The Scream](https://www.wikiart.org/en/edvard-munch/the-scream-1893), [Corridor](https://www.wikiart.org/en/vincent-van-gogh/corridor-in-the-asylum-1889):
+The following reproduce Figure 3 from the [paper](https://arxiv.org/abs/1508.06576), which renders a photograph of the Neckarfront in Tübingen, Germany in the style of 4 different iconic paintings [The Starry Night](https://www.wikiart.org/en/vincent-van-gogh/the-starry-night-1889), [Composition VII](https://www.wikiart.org/en/wassily-kandinsky/composition-vii-1913), [The Scream](https://www.wikiart.org/en/edvard-munch/the-scream-1893), [Corridor](https://www.wikiart.org/en/vincent-van-gogh/corridor-in-the-asylum-1889):
 
 <div align="center">
  <img src="./img/tuebingen.jpg" height="223px">
@@ -63,7 +63,7 @@ Here we reproduce Figure 3 from the [paper](https://arxiv.org/abs/1508.06576), w
 ## __Content/Style Tradeoff__
 The relative weight of the style and content can be controlled.
 
-Here we render a lion photograph image with an increasing style weight applied to the style of [Amadeo Cardoso](https://en.citaliarestauro.com/amadeo-de-souza-cardoso-a-fabulous-painter/)
+Example below renders a lion photograph image with an increasing style weight applied to the style of [Amadeo Cardoso](https://en.citaliarestauro.com/amadeo-de-souza-cardoso-a-fabulous-painter/)
 
 <div align="center">
 <img src="./img/lion.jpg" height="220px">

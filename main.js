@@ -116,7 +116,7 @@ class Main {
     this.connectImageAndSizeSlider(this.styleImg, this.styleImgSlider);
 
     this.styleRatio = 1.0;
-    this.styleRatioSlider = document.getElementById("stylized-img-ratio");
+    this.styleRatioSlider = document.getElementById("stylized-ratio");
     this.styleRatioSlider.oninput = (evt) => {
       this.styleRatio = evt.target.value / 100;
     };
@@ -184,6 +184,7 @@ class Main {
   async startStyling() {
     await tf.nextFrame();
     this.styleButton.textContent = "Generating image ...";
+    this.styleButton.disabled = true;
     await tf.nextFrame();
     let bottleneck = await tf.tidy(() => {
       return this.styleNet.predict(

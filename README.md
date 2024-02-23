@@ -4,7 +4,7 @@ This project utilizes neural style transfer techniques to transfer the style of 
 
 Website link: []()
 
-Notebook: []()
+[Jupyter Notebook](https://github.com/Melo04/Neural-style-transfer/blob/main/notebook.ipynb)
 
 ## __What is Neural Style Transfer (NST)__
 

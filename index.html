@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Neural Style Transfer</title>
     <script src="dist/bundle.js"></script>
     <link href="./output.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -45,7 +45,7 @@
             <option value="" disabled>Choose an image</option>
             <option value="pic" data-modal-target="cam-modal" data-modal-toggle="cam-modal">Take a picture</option>
             <option value="file">Select from file</option>
-            <option value="forest_house">Forest house</option>
+            <option selected value="forest_house">Forest house</option>
             <option value="wooden_house">Brown Wooden House</option>
             <option value="twins_tower">Petronas Twins Tower</option>
             <option value="golden_gate">Golden Gate</option>
@@ -111,11 +111,10 @@
                 <canvas id="stylized" class=""></canvas>
                 <br>
                 <label
-                id="stylized-img-ratio"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >Stylization Strength</label>
                 <input
-                id="default-range"
+                id="stylized-ratio"
                 type="range"
                 min="0"
                 max="100"
@@ -177,8 +176,8 @@
         </div>
     </div> -->
 
-    <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
-    <div class="grid mx-56 my-10 dark:text-white">
+    <hr class="w-48 h-1 mx-auto bg-gray-100 border-0 rounded dark:bg-gray-700"/>
+    <div class="grid mx-72 my-10 dark:text-white">
         <h2 class="mx-auto text-2xl font-bold my-5">What is Neural Style Transfer?</h2>
         <p>Neural Style Transfer is an optimization technique used to take
             two images—a content image and a style reference image (such as an
@@ -189,7 +188,7 @@
             style image? To answer this, let's look at what Convolutional
             Neural Networks(CNN) are actually learning. <br /> <br />
         </p>
-        <img src="./img/figure/fig1.png" alt="hi" class="mx-auto mb-5 w-4/6" />
+        <img src="./img/figure/fig1.png" alt="Neural Style Transfer" class="mx-auto mb-5 w-4/6" />
         <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
         <h2 class="mx-auto text-2xl font-bold my-5">Convolutional Neural Networks (CNN)</h2>
         <p>Convolutional Neural Networks are in charge of converting the
@@ -205,7 +204,7 @@
               representation of the style of a reference image, we use the
               correlation between different filter responses. The features that
               we get from the higher levels of the model can be considered more
-              related to the content of the image. Let's dive more deeper.
+              related to the content of the image.
               <br /> <br />
         </p>
         <img src="./img/figure/fig3.png" alt="CNN" class="mx-auto mb-5 w-4/6" />
@@ -219,6 +218,7 @@
               ImageNet database. The idea of using a network trained on a
               different task and applying it to a new task is called transfer
               learning. <br /> <br />
+              <img src="./img/figure/fig2.png" alt="Neural Style Transfer Basic Structure" class="mx-auto my-5 w-4/6" />
               Firstly, we initialize a noisy image, which is the image that we
               want to generate. We then feed this noisy image through the VGG-19
               network and obtain the feature representations from the
@@ -229,53 +229,76 @@
               loss of generated image(G) to the respective content(C) and
               style(S) image.
         </p>
-        <img src="./img/figure/fig2.png" alt="Neural Style Transfer Basic Structure" class="mx-auto my-5 w-4/6" />
         <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
         <h2 class="mx-auto text-2xl font-bold my-5">Content Loss</h2>
         <p>Content Loss helps to establish similarities between the content
-              image and the generated image. <br /> <br />
+              image and the generated image. Take note that the algorithm below are taken from the paper, <a class="text-blue-400 underline" href="https://arxiv.org/pdf/1508.06576.pdf">A Neural Algorithm of Artistic Style</a> by Leon A. Gatys, Alexander S. Ecker, Matthias Bethge, (2015). <br /> <br />
               It is calculated by Euclidean distance between the respective
               intermediate higher-level feature representation of input image
               (x) and content image (p) at layer l. This helps us to deduce that
               images having the same content should also have similar
-              activations in the higher layers.
+              activations in the higher layers. 
+              $$L_{content}(\vec{p}, \vec{x}, l) = \frac{1}{2} \sum_{\text{i,j}} (F^{l}_{ij} - P^{l}_{ij})^2 $$
         </p>
-        <img src="./img/figure/fig4.png" alt="Content Loss" class="mx-auto my-5 w-2/6" />
         <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
         <h2 class="mx-auto text-2xl font-bold my-5">Style Loss</h2>
         <p>Style loss is conceptually different from Content loss. We cannot
               just compare the intermediate features of the two images and get
               the style loss. <br /> <br />
-              Here's where we intrpduce the concept of Gram Matrix. Gram matrix
+              Here's where we introduce the concept of Gram Matrix. Gram matrix
               is a way to interpret style information in an image as it shows
               the overall distribution of features in a given layer. It is
               measured as the amount of correlation present between features
-              maps in a given layer. <br /> <br />
+              maps in a given layer. The formula for Gram matrix can be defined as follows: <br /> <br />
+              $$ G^{l}_{cd} = \frac{\sum_{\text{i,j}} F^{l}_{ijc}(x) F^{l}_{ijd}(x) }{IJ} $$ <br/> <br/>
+              Style loss is calculated by the distance between the gram matrix of the generated image and the style reference image.
+              The contribution for each layer in the style information is calculated by the below formula:
+              $$ E_{l} = \frac{1}{4N^{2}_{l}M^{2}{l}} \sum_{i,j}(G^{l}_{ij} - A^{l}_{ij})^{2} $$ <br/> <br/>
+              Thus, the total style loss across each layer is expressed as:
+              $$ L_{\text{style}}(a,x) = \sum_{l \in L} w_{l} E_{l} $$
         </p>
-        <img src="./img/figure/fig7.png" alt="Style Loss" class="mx-auto my-5 w-2/6" />
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
+        <h2 class="mx-auto text-2xl font-bold my-5">Total Loss Function</h2>
+        <p>The total loss function is the sum of the cost of the content and the style image. Mathematically, it can be expressed as :
+            $$ L_{\text{total}}(\vec{p}, \vec{a}, \vec{x}) = \alpha L_{content}(\vec{p},\vec{x}) + \beta L_{style}({\vec{a}, \vec{x}}) $$
+            Alpha and beta are used for weighing Content and Style respectively. In general,they define the weightage of each cost in the Generated output image. 
+        </p>
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
+        <h2 class="mx-auto text-2xl font-bold my-5">Summary</h2>
+        <p>In general, NST employs a pre-trained Convolutional Neural Network for feature extraction and separation of content and style representations from an image. 
+            The architecture of the model performs the training using two loss terms: Content Loss and Style Loss
+            Content loss is calculated by measuring the difference between the higher-level intermediate layer feature maps
+            Style loss can be measured by the degree of correlation between the responses from different filters at a level.  
+            Below depicts the model architecture for Neural Style Transfer.
+        </p>
+        <img src="./img/figure/fig4.png" alt="Neural Style Transfer Model Architecture" class="mx-auto my-5 w-4/6" />
+        <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
         <h2 class="mx-auto text-2xl font-bold my-5">References</h2>
         <p class="mx-auto">
-            [1] Leon A. Gatys, Alexander S. Ecker, Matthias Bethge, (2015).
+            [1] 
               <a
                 href="https://arxiv.org/abs/1508.06576"
                 isExternal
                 class="text-blue-400 underline"
               >
                 A Neural Algorithm of Artistic Style
-            </a>
+            </a>, Leon A. Gatys, Alexander S. Ecker, Matthias Bethge, (2015).
               <br /> <br />
               [2]
-              <a
+            <a
                 href="https://www.tensorflow.org/tutorials/generative/style_transfer"
                 isExternal
                 class="text-blue-400 underline"
               >
                 Neural Style Transfer Tensorflow Core Tutorial.
             </a>
+            <br/> <br/>
+            [3]
+            <a href="https://www.v7labs.com/blog/neural-style-transfer" class="text-blue-400 underline">Neural Style Transfer: Everything You Need to Know [Guide]</a>, Pragati Baheti
         </p>
     </div>
     </div>
-    <a href="https://github.com/Melo04/neural-style-transfer">
+    <a href="https://github.com/Melo04/Neural-style-transfer">
     <footer>
         <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
             <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
@@ -286,7 +309,11 @@
     
     <!-- JQuery -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- TailwindCSS Javascript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-
+    <!-- MathJax -->
+    <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
 </body>
 </html>

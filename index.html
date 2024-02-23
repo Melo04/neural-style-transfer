@@ -14,7 +14,7 @@
     Neural Style Transfer
     </h1>
     <input type="file" id="file-select" style="display: none" accept="image/x-png,image/gif,image/jpeg"/>
-    <div class="grid grid-cols-2 my-5">
+    <div class="grid mx-8 md:grid-cols-2 lg:grid-cols-2 my-5">
         <div class="col">
             <img id="content-img" src="./img/forest_house.jpg" alt="" class="mx-auto h-64"></img>
             <div class="max-w-sm my-5 mx-auto">
@@ -52,7 +52,7 @@
             <option value="grace_hopper">Grace Hopper</option>
             <option value="lion">Lion</option>
         </select>
-        <button id="camera" data-modal-target="cam-modal" data-modal-toggle="cam-modal" type="button" class="text-white mt-5 bg-blue-700 hover:bg-blue-800 justify-center text-center flex w-full font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Take a picture</button>
+        <button id="camera" data-modal-target="cam-modal" data-modal-toggle="cam-modal" type="button" class="text-white my-5 bg-blue-700 hover:bg-blue-800 justify-center text-center flex w-full font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Take a picture</button>
         </form>
         </div>
         <div class="col">
@@ -83,7 +83,7 @@
             >
             <option value="" disabled>Choose an image</option>
             <option value="file">Select from file</option>
-            <option value="starry_night">Starry night</option>
+            <option selected value="starry_night">Starry night</option>
             <option value="kanaga_great_wave">Kanagawa Great Wave</option>
             <option value="irises">Irises</option>
             <option value="corridor">Corridor</option>
@@ -103,7 +103,7 @@
             </form>
         </div>
     </div>
-    <div class="flex justify-center">
+    <div class="flex justify-center mx-8">
         <div>
             <div class="max-w-sm my-5 mx-auto">
                 <canvas id="stylized" class=""></canvas>
@@ -120,7 +120,7 @@
                 class="w-full h-2 bg-gray-200 rounded-lg appearance-auto cursor-pointer dark:bg-gray-700"
                 />
                 <button type="button" id="randomize" class="text-white my-5 w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Randomize parameters</button>
-                <button disabled id="style-button" class="text-white mt-5 mb-10 w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Loading stylization model. Please wait..</button>
+                <button disabled id="style-button" class="text-white mt-5 mb-10 w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">Loading stylization model. Please wait..</button>
             </div>
         </div>
     </div>
@@ -152,7 +152,7 @@
     </div>
 
     <hr class="w-48 h-1 mx-auto bg-gray-100 border-0 rounded dark:bg-gray-700"/>
-    <div class="grid mx-72 my-10 dark:text-white">
+    <div class="grid justify-center md:justify-normal lg:justify-normal mx-12 md:mx-56 lg:mx-72 my-10 dark:text-white">
         <h2 class="mx-auto text-2xl font-bold my-5">What is Neural Style Transfer?</h2>
         <p>Neural Style Transfer is an optimization technique used to take
             two images—a content image and a style reference image (such as an
@@ -274,7 +274,7 @@
     </div>
     <a href="https://github.com/Melo04/Neural-style-transfer">
     <footer>
-        <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+        <div class="w-full justify-center text-center max-w-screen-xl mx-auto p-4 md:py-8">
             <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
             <span class="block text-sm text-gray-500 sm:text-center dark:hover:text-white dark:text-gray-400">Made with <i class="fa fa-heart pulse"></i> by Melody Koh <i class="fa-brands fa-github"></i></span>
         </div>

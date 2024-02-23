@@ -17,8 +17,6 @@ class Main {
         this.transformNet = model;
       })
       .finally(() => this.enableStylizeButtons());
-
-    this.initalizeWebcamVariables();
     this.generateImage();
 
     Promise.all([
@@ -53,7 +51,6 @@ class Main {
 
   initalizeWebcamVariables() {
     this.camModal = $("#cam-modal");
-
     this.snapButton = document.getElementById("snap-button");
     this.webcamVideoElement = document.getElementById("webcam-video");
 
@@ -63,11 +60,8 @@ class Main {
       navigator.mozGetUserMedia ||
       navigator.msGetUserMedia;
 
-    this.camModal.on("hidden.bs.modal", () => {
-      this.stream.getTracks()[0].stop();
-    });
-
-    this.camModal.on("shown.bs.modal", () => {
+    // this.stream.getTracks()[0].stop();
+    // only show camera modal when the user clicks on the camera button
       navigator.getUserMedia(
         {
           video: true,
@@ -81,11 +75,10 @@ class Main {
           console.error(err);
         }
       );
-    });
+    // });
   }
 
   openModal(element) {
-    this.camModal.show();
     this.snapButton.onclick = () => {
       const hiddenCanvas = document.getElementById('hidden-canvas');
       const hiddenContext = hiddenCanvas.getContext('2d');
@@ -138,6 +131,11 @@ class Main {
     };
 
     this.contentSelect = document.getElementById("content-select");
+    this.camera = document.getElementById("camera");
+    this.camera.onclick = () => {
+      this.initalizeWebcamVariables();
+      this.setImage(this.contentImg, "pic");
+    } 
     this.contentSelect.onchange = (evt) =>
       this.setImage(this.contentImg, evt.target.value);
     this.contentSelect.onclick = () => (this.contentSelect.value = "");
@@ -280,6 +278,7 @@ class Main {
         dummyOut.print();
       });
     });
+    console.log(profile);
     const time = await tf.time(() => {
       tf.tidy(() => {
         for (let i = 0; i < 10; i++) {
@@ -288,6 +287,7 @@ class Main {
         }
       });
     });
+    console.log(time);
   }
 }
 

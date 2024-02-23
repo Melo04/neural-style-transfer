@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Neural Style Transfer</title>
-    <script src="dist/bundle.js"></script>
     <link href="./output.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
@@ -15,7 +14,6 @@
     Neural Style Transfer
     </h1>
     <input type="file" id="file-select" style="display: none" accept="image/x-png,image/gif,image/jpeg"/>
-    <div class="">
     <div class="grid grid-cols-2 my-5">
         <div class="col">
             <img id="content-img" src="./img/forest_house.jpg" alt="" class="mx-auto h-64"></img>
@@ -43,7 +41,6 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
             <option value="" disabled>Choose an image</option>
-            <option value="pic" data-modal-target="cam-modal" data-modal-toggle="cam-modal">Take a picture</option>
             <option value="file">Select from file</option>
             <option selected value="forest_house">Forest house</option>
             <option value="wooden_house">Brown Wooden House</option>
@@ -54,8 +51,9 @@
             <option value="tuebingen">Tuebingen</option>
             <option value="grace_hopper">Grace Hopper</option>
             <option value="lion">Lion</option>
-            </select>
-            </form>
+        </select>
+        <button id="camera" data-modal-target="cam-modal" data-modal-toggle="cam-modal" type="button" class="text-white mt-5 bg-blue-700 hover:bg-blue-800 justify-center text-center flex w-full font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Take a picture</button>
+        </form>
         </div>
         <div class="col">
             <img id="style-img" crossorigin="anonymous" src="./img/starry_night.jpg" alt="" class="mx-auto h-64"></img>
@@ -122,59 +120,36 @@
                 class="w-full h-2 bg-gray-200 rounded-lg appearance-auto cursor-pointer dark:bg-gray-700"
                 />
                 <button type="button" id="randomize" class="text-white my-5 w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Randomize parameters</button>
-                <button disabled id="style-button" class="text-white my-5 w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Loading stylization model. Please wait..</button>
+                <button disabled id="style-button" class="text-white mt-5 mb-10 w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Loading stylization model. Please wait..</button>
             </div>
         </div>
     </div>
 
-    <canvas id="hidden-canvas"></canvas>
-    <div id="cam-modal" data-modal-target="cam-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-2xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Take a picture
-                </h3>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cam-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
-            <div class="p-4">
-                <video id="webcam-video" class="centered" width="500" height="375"></video>
-            </div>
-            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button id="snap-button" data-modal-hide="cam-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Snap</button>
-                <button data-modal-hide="cam-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
+    <canvas id="hidden-canvas" class="hidden"></canvas>
+    <div id="cam-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Take a picture
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cam-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <video id="webcam-video" class="mx-auto" width="500" height="375"></video>
+                </div>
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button id="snap-button" data-modal-hide="cam-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Snap</button>
+                    <button data-modal-hide="cam-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-    <!-- <div class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full" id="cam-modal" aria-labelledby="exampleModalLabel" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog relative w-auto pointer-events-none max-w-lg my-8 mx-auto px-4 sm:px-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="exampleModalLabel">Take picture</h3>
-                            <div class="mt-2">
-                                <video id="webcam-video" class="mx-auto" width="500" height="375"></video>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" id="snap-button">Snap!</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
     <hr class="w-48 h-1 mx-auto bg-gray-100 border-0 rounded dark:bg-gray-700"/>
     <div class="grid mx-72 my-10 dark:text-white">
@@ -297,7 +272,6 @@
             <a href="https://www.v7labs.com/blog/neural-style-transfer" class="text-blue-400 underline">Neural Style Transfer: Everything You Need to Know [Guide]</a>, Pragati Baheti
         </p>
     </div>
-    </div>
     <a href="https://github.com/Melo04/Neural-style-transfer">
     <footer>
         <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
@@ -307,6 +281,8 @@
     </footer>
     </a>
     
+    <!-- Tensorflow Script -->
+    <script src="dist/bundle.js"></script>
     <!-- JQuery -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- TailwindCSS Javascript -->

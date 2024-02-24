@@ -6,9 +6,7 @@
   "scripts": {
     "start": "budo main.js:dist/bundle.js --live --host localhost",
     "prep": "yarn && mkdirp dist",
-    "build": "browserify main.js -o dist/bundle.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "yarn build && uglifyjs dist/bundle.js -c -m -o dist/bundle.min.js"
+    "build": "browserify main.js -o dist/bundle.js"
   },
   "keywords": [],
   "author": "",

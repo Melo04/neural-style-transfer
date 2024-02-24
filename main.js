@@ -5,18 +5,6 @@ tf.ENV.set("WEBGL_PACK", false);
 class Main {
   constructor() {
     this.fileSelect = document.getElementById("file-select");
-
-    this.loadMobileNetStyleModel()
-      .then((model) => {
-        this.styleNet = model;
-      })
-      .finally(() => this.enableStylizeButtons());
-
-    this.loadTransformerModel()
-      .then((model) => {
-        this.transformNet = model;
-      })
-      .finally(() => this.enableStylizeButtons());
     this.generateImage();
 
     Promise.all([
@@ -30,26 +18,17 @@ class Main {
   }
 
   async loadMobileNetStyleModel() {
-    if (!this.mobileStyleNet) {
-      this.mobileStyleNet = await tf.loadGraphModel(
-        "models/style/model.json"
-      );
-    }
-
+    this.mobileStyleNet = this.mobileStyleNet || await tf.loadGraphModel("models/style/model.json");
     return this.mobileStyleNet;
   }
 
   async loadTransformerModel() {
-    if (!this.transformNet) {
-      this.transformNet = await tf.loadGraphModel(
-        "models/transformer/model.json"
-      );
-    }
-
+    this.transformNet = this.transformNet || await tf.loadGraphModel("models/transformer/model.json");
     return this.transformNet;
   }
 
-  initalizeWebcamVariables() {
+  // initialize webcam
+  initalizeWebcam() {
     this.camModal = $("#cam-modal");
     this.snapButton = document.getElementById("snap-button");
     this.webcamVideoElement = document.getElementById("webcam-video");
@@ -60,25 +39,23 @@ class Main {
       navigator.mozGetUserMedia ||
       navigator.msGetUserMedia;
 
-    // this.stream.getTracks()[0].stop();
-    // only show camera modal when the user clicks on the camera button
-      navigator.getUserMedia(
-        {
-          video: true,
-        },
-        (stream) => {
-          this.stream = stream;
-          this.webcamVideoElement.srcObject = stream;
-          this.webcamVideoElement.play();
-        },
-        (err) => {
-          console.error(err);
-        }
-      );
-    // });
+    navigator.getUserMedia(
+      {
+        video: true,
+      },
+      (stream) => {
+        this.stream = stream;
+        this.webcamVideoElement.srcObject = stream;
+        this.webcamVideoElement.play();
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
-  openModal(element) {
+  // open camera modal
+  openCameraModal(element) {
     this.snapButton.onclick = () => {
       const hiddenCanvas = document.getElementById('hidden-canvas');
       const hiddenContext = hiddenCanvas.getContext('2d');
@@ -92,6 +69,7 @@ class Main {
     };
   }
 
+  // generate image according to content and style image
   generateImage() {
     this.contentImg = document.getElementById("content-img");
     this.contentImg.onerror = () => {
@@ -104,9 +82,9 @@ class Main {
     this.stylized = document.getElementById("stylized");
 
     this.contentImgSlider = document.getElementById("content-img-size");
-    this.connectImageAndSizeSlider(this.contentImg, this.contentImgSlider);
+    this.resizeImage(this.contentImg, this.contentImgSlider);
     this.styleImgSlider = document.getElementById("style-img-size");
-    this.connectImageAndSizeSlider(this.styleImg, this.styleImgSlider);
+    this.resizeImage(this.styleImg, this.styleImgSlider);
 
     this.styleRatio = 1.0;
     this.styleRatioSlider = document.getElementById("stylized-ratio");
@@ -120,10 +98,12 @@ class Main {
         this.enableStylizeButtons();
       });
     };
+
+    // randomize parameters
     this.randomizeButton = document.getElementById("randomize");
     this.randomizeButton.onclick = () => {
       this.styleRatioSlider.value = getRndInteger(0, 100);
-      this.contentImgSlider.value = getRndInteger(256, 400);
+      this.contentImgSlider.value = getRndInteger(256, 350);
       this.styleImgSlider.value = getRndInteger(100, 400);
       this.styleRatioSlider.dispatchEvent(new Event("input"));
       this.contentImgSlider.dispatchEvent(new Event("input"));
@@ -132,8 +112,9 @@ class Main {
 
     this.contentSelect = document.getElementById("content-select");
     this.camera = document.getElementById("camera");
+    // enable web cam
     this.camera.onclick = () => {
-      this.initalizeWebcamVariables();
+      this.initalizeWebcam();
       this.setImage(this.contentImg, "pic");
     } 
     this.contentSelect.onchange = (evt) =>
@@ -145,7 +126,8 @@ class Main {
     this.styleSelect.onclick = () => (this.styleSelect.value = "");
   }
 
-  connectImageAndSizeSlider(img, slider) {
+  //resize image according to the slider value
+  resizeImage(img, slider) {
     slider.oninput = (evt) => {
       img.style.height = evt.target.value + "px";
       if (img.style.width) {
@@ -154,6 +136,7 @@ class Main {
     };
   }
 
+  // set Image according to the user option (upload file, take picture or use the predefined image)
   setImage(element, selectedValue) {
     if (selectedValue === "file") {
       this.fileSelect.onchange = (evt) => {
@@ -167,12 +150,13 @@ class Main {
       };
       this.fileSelect.click();
     } else if (selectedValue === "pic") {
-      this.openModal(element);
+      this.openCameraModal(element);
     } else {
       element.src = "img/" + selectedValue + ".jpg";
     }
   }
 
+  // enable stylize button when it is not generating image
   enableStylizeButtons() {
     this.styleButton.disabled = false;
     this.randomizeButton.disabled = false;
@@ -184,15 +168,18 @@ class Main {
     this.styleButton.textContent = "Generating image ...";
     this.styleButton.disabled = true;
     await tf.nextFrame();
+    //takes a styleImg, preprocesses it, passes it through the styleNet for inference
     let bottleneck = await tf.tidy(() => {
       return this.styleNet.predict(
         tf.browser
+          //converts style image to tensor and pixel values to floats
           .fromPixels(this.styleImg)
           .toFloat()
           .div(tf.scalar(255))
           .expandDims()
       );
     });
+    // if style ratio is not 1.0, blend style bottleneck with identity bottleneck
     if (this.styleRatio !== 1.0) {
       this.styleButton.textContent =
         "Generating image...";
@@ -206,6 +193,7 @@ class Main {
             .expandDims()
         );
       });
+      //scale and blend style and identity bottlenecks
       const styleBottleneck = bottleneck;
       bottleneck = await tf.tidy(() => {
         const styleBottleneckScaled = styleBottleneck.mul(
@@ -219,8 +207,11 @@ class Main {
       styleBottleneck.dispose();
       identityBottleneck.dispose();
     }
+
     this.styleButton.textContent = "Stylizing image...";
     await tf.nextFrame();
+
+    // stylize the content image using the obtained bottleneck representation
     const stylized = await tf.tidy(() => {
       return this.transformNet
         .predict([
@@ -233,6 +224,8 @@ class Main {
         ])
         .squeeze();
     });
+
+    // convert stylized image tensor to pixel image and display it
     await tf.browser.toPixels(stylized, this.stylized);
     bottleneck.dispose();
     stylized.dispose();

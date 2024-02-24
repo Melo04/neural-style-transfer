@@ -25,7 +25,7 @@
                 <input
                 type="range"
                 min="256"
-                max="400"
+                max="350"
                 value="256"
                 id="content-img-size"
                 class="w-full h-2 bg-gray-200 rounded-lg appearance-auto cursor-pointer dark:bg-gray-700"
@@ -207,8 +207,8 @@
         <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
         <h2 class="mx-auto text-2xl font-bold my-5">Content Loss</h2>
         <p>Content Loss helps to establish similarities between the content
-              image and the generated image. Take note that the algorithm below are taken from the paper, <a class="text-blue-400 underline" href="https://arxiv.org/pdf/1508.06576.pdf">A Neural Algorithm of Artistic Style</a> by Leon A. Gatys, Alexander S. Ecker, Matthias Bethge, (2015). <br /> <br />
-              It is calculated by Euclidean distance between the respective
+              image and the generated image. Take note that all the formulas below are taken from the paper, <a class="text-blue-400 underline" href="https://arxiv.org/pdf/1508.06576.pdf">A Neural Algorithm of Artistic Style</a> by Leon A. Gatys, Alexander S. Ecker, Matthias Bethge, (2015). <br /> <br />
+              Content loss is calculated by Euclidean distance between the respective
               intermediate higher-level feature representation of input image
               (x) and content image (p) at layer l. This helps us to deduce that
               images having the same content should also have similar
@@ -241,8 +241,8 @@
         <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"/>
         <h2 class="mx-auto text-2xl font-bold my-5">Summary</h2>
         <p>In general, NST employs a pre-trained Convolutional Neural Network for feature extraction and separation of content and style representations from an image. 
-            The architecture of the model performs the training using two loss terms: Content Loss and Style Loss
-            Content loss is calculated by measuring the difference between the higher-level intermediate layer feature maps
+            The architecture of the model performs the training using two loss terms: Content Loss and Style Loss.
+            Content loss is calculated by measuring the difference between the higher-level intermediate layer feature maps.
             Style loss can be measured by the degree of correlation between the responses from different filters at a level.  
             Below depicts the model architecture for Neural Style Transfer.
         </p>
@@ -265,7 +265,7 @@
                 isExternal
                 class="text-blue-400 underline"
               >
-                Neural Style Transfer Tensorflow Core Tutorial.
+                Neural Style Transfer Tensorflow Core Tutorial
             </a>
             <br/> <br/>
             [3]
